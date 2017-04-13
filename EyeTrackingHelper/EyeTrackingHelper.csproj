@@ -52,6 +52,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Command.cs" />
+    <Compile Include="Enums\ShortcutsType.cs" />
     <Compile Include="Models\Shortcut.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

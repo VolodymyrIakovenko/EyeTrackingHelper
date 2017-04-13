@@ -38,7 +38,7 @@
                         <Button 
                             Grid.Column="1" 
                             Grid.Row="1" 
-                            Content="{Binding Name}" 
+                            Content="{Binding Text}" 
                             wpf:Behaviors.IsActivatable="True"
                             Command="{Binding ExecutionCommand}"/>
                     </Grid>

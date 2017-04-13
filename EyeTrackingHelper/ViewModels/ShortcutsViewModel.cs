@@ -3,12 +3,9 @@
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
-    using EnvDTE;
     using EyeTrackingHelper.Annotations;
-    using Microsoft.VisualStudio.PlatformUI;
-    using Microsoft.VisualStudio.Shell;
-    using Command = EyeTrackingHelper.Command;
     using Shortcut = EyeTrackingHelper.Models.Shortcut;
+    using Enums;
 
     public class ShortcutsViewModel : INotifyPropertyChanged
     {
@@ -18,7 +15,14 @@
         {
             Shortcuts = new ObservableCollection<Shortcut>
             {
-                new Shortcut("{ }", new Command(output => InsertTextToCodePane(), _ => true)),
+                new Shortcut("{ }", ShortcutsType.CurlyBrackets),
+                new Shortcut("( )", ShortcutsType.Parentheses),
+                new Shortcut("For", ShortcutsType.For),
+                new Shortcut("Foreach", ShortcutsType.Foreach),
+                new Shortcut("If", ShortcutsType.If),
+                new Shortcut("Auto Property", ShortcutsType.AutoProperty),
+                new Shortcut("Console Output", ShortcutsType.ConsoleOutput),
+                new Shortcut("Try Catch", ShortcutsType.TryCatch)
             };
         }
 
@@ -39,33 +43,5 @@
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        private void InsertTextToCodePane()
-        {
-            var dte = Package.GetGlobalService(typeof(DTE)) as DTE;
-            if (dte == null)
-            {
-                return;
-            }
-
-            var activeDoc = dte.ActiveDocument.Object() as TextDocument;
-            if (activeDoc == null)
-            {
-                return;
-            }
-
-            var currentLine = activeDoc.Selection.CurrentLine;
-            var currentColumn = activeDoc.Selection.CurrentColumn;
-
-            activeDoc.Selection.Insert("{");
-            activeDoc.Selection.NewLine();
-            activeDoc.Selection.NewLine();
-            activeDoc.Selection.MoveTo(activeDoc.Selection.CurrentLine, currentColumn);
-            activeDoc.Selection.Insert("}");
-            activeDoc.Selection.MoveTo(currentLine + 1, currentColumn);
-            activeDoc.Selection.Indent();
-        }
-
-
     }
 }
