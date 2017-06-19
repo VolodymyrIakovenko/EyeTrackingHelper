@@ -15,14 +15,18 @@
         {
             Shortcuts = new ObservableCollection<Shortcut>
             {
-                new Shortcut("{ }", ShortcutsType.CurlyBrackets),
-                new Shortcut("( )", ShortcutsType.Parentheses),
+                new Shortcut("{...}", ShortcutsType.CurlyBrackets),
+                new Shortcut("(...)", ShortcutsType.Parentheses),
                 new Shortcut("For", ShortcutsType.For),
                 new Shortcut("Foreach", ShortcutsType.Foreach),
                 new Shortcut("If", ShortcutsType.If),
+                new Shortcut("Else", ShortcutsType.Else),
                 new Shortcut("Auto Property", ShortcutsType.AutoProperty),
                 new Shortcut("Console Output", ShortcutsType.ConsoleOutput),
-                new Shortcut("Try Catch", ShortcutsType.TryCatch)
+                new Shortcut("Row Definitions", ShortcutsType.RowDefinitions),
+                new Shortcut("Column Definitions", ShortcutsType.ColumnDefinitions),
+                new Shortcut("Try Catch", ShortcutsType.TryCatch),
+                new Shortcut("⌫", ShortcutsType.Undo),
             };
         }
 

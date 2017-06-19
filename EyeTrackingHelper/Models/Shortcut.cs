@@ -2,7 +2,6 @@
 {
     using Enums;
     using EnvDTE;
-    using EnvDTE80;
     using Microsoft.VisualStudio.Shell;
     using System;
     using System.Windows.Input;
@@ -26,7 +25,7 @@
         private void InsertTextToCodePane()
         {
             var dte = Package.GetGlobalService(typeof(DTE)) as DTE;
-            if (dte == null)
+            if (dte == null || dte.ActiveDocument == null)
             {
                 return;
             }
@@ -47,6 +46,14 @@
                     OutputParentheses(activeDoc);
                     break;
 
+                case ShortcutsType.RowDefinitions:
+                    OutputRowDefinitions(activeDoc, 3);
+                    break;
+
+                case ShortcutsType.ColumnDefinitions:
+                    OutputColumnDefinitions(activeDoc, 3);
+                    break;
+
                 case ShortcutsType.For:
                     ExecuteSnippet("for", activeDoc);
                     break;
@@ -56,7 +63,11 @@
                     break;
 
                 case ShortcutsType.If:
-                    ExecuteSnippet("If", activeDoc);
+                    ExecuteSnippet("if", activeDoc);
+                    break;
+
+                case ShortcutsType.Else:
+                    ExecuteSnippet("else", activeDoc);
                     break;
 
                 case ShortcutsType.AutoProperty:
@@ -69,6 +80,10 @@
 
                 case ShortcutsType.TryCatch:
                     ExecuteSnippet("try", activeDoc);
+                    break;
+
+                case ShortcutsType.Undo:
+                    ExecuteUndo(activeDoc);
                     break;
 
                 default:
@@ -99,6 +114,58 @@
             activeDoc.Selection.Insert("(");
             activeDoc.Selection.Insert(")");
             activeDoc.Selection.MoveTo(activeDoc.Selection.CurrentLine, activeDoc.Selection.CurrentColumn - 1);
+        }
+
+        private void OutputRowDefinitions(TextDocument activeDoc, int rowAmount)
+        {
+            activeDoc.Selection.Insert("<Grid.RowDefinitions>");
+            activeDoc.Selection.NewLine();
+
+            for (var i = 0; i < rowAmount; i++)
+            {
+                activeDoc.Selection.Insert("<RowDefinition Height=\"*\"/>");
+                if (i != rowAmount - 1)
+                {
+                    activeDoc.Selection.NewLine();
+                }
+            }
+
+            activeDoc.Selection.NewLine();
+            activeDoc.Selection.Unindent();
+            activeDoc.Selection.Insert("</Grid.RowDefinitions>");
+        }
+
+        private void OutputColumnDefinitions(TextDocument activeDoc, int columnAmount)
+        {
+            activeDoc.Selection.Insert("<Grid.ColumnDefinitions>");
+            activeDoc.Selection.NewLine();
+
+            for (var i = 0; i < columnAmount; i++)
+            {
+                activeDoc.Selection.Insert("<ColumnDefinition Width=\"*\"/>");
+                if (i != columnAmount - 1)
+                {
+                    activeDoc.Selection.NewLine();
+                }
+            }
+
+            activeDoc.Selection.NewLine();
+            activeDoc.Selection.Unindent();
+            activeDoc.Selection.Insert("</Grid.ColumnDefinitions>");
+        }
+
+        private void ExecuteUndo(TextDocument activeDoc)
+        {
+            try
+            {
+                activeDoc.DTE.ActiveDocument.Activate();
+                activeDoc.DTE.ExecuteCommand("Edit.Undo");
+            }
+            catch (Exception)
+            {
+                // Nothing to undo, ignore.
+            }
+            
         }
 
         private void ExecuteSnippet(string snippet, TextDocument activeDoc)

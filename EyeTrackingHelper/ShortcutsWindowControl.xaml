@@ -6,12 +6,38 @@
              xmlns:wpf="clr-namespace:Tobii.EyeX.Wpf;assembly=Tobii.EyeX.Net"
              xmlns:eyeTrackingHelper="clr-namespace:EyeTrackingHelper"
              xmlns:viewModels="clr-namespace:EyeTrackingHelper.ViewModels"
-             Background="{DynamicResource VsBrush.Window}"
-             Foreground="{DynamicResource VsBrush.WindowText}"
+             xmlns:vsShell="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.14.0"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance Type=viewModels:ShortcutsViewModel, IsDesignTimeCreatable=True}"
              Name="MyToolWindow">
+    
+    <UserControl.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static vsShell:EnvironmentColors.ButtonTextBrushKey}}"/>
+            <Setter Property="Background" Value="{DynamicResource {x:Static vsShell:EnvironmentColors.ToolWindowBackgroundBrushKey}}"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border 
+                            BorderThickness="1" 
+                            BorderBrush="{TemplateBinding Foreground}" 
+                            Background="{TemplateBinding Background}">
+
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource {x:Static vsShell:EnvironmentColors.SystemButtonHighlightBrushKey}}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
     <Grid>
         <ItemsControl ItemsSource="{Binding Shortcuts}">
             <ItemsControl.ItemsPanel>
